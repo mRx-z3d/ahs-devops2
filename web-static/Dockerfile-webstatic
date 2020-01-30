@@ -1,0 +1,6 @@
+FROM openjdk:latest
+VOLUME ["/tmp"]
+COPY ./spring-boot-sample-web-static.war /app/app_package.jar
+ENTRYPOINT ["java","-jar","/app/app_package.jar"]
+EXPOSE 8080/tcp
+RUN echo "Your web-static container is now ready!"

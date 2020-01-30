@@ -1,0 +1,6 @@
+FROM openjdk:latest
+VOLUME ["/tmp"]
+COPY ./spring-boot-sample-web-ui.jar /app/app_package.jar
+ENTRYPOINT ["java","-jar","-Dserver.servlet.context-path=/ui","/app/app_package.jar"]
+EXPOSE 8080/tcp
+RUN echo "Your web-ui container is now ready!"

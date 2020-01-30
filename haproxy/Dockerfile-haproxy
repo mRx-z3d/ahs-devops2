@@ -1,0 +1,3 @@
+FROM haproxy:latest
+COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
+RUN echo "Your HAProxy container is now ready!"

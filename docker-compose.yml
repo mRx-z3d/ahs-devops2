@@ -1,0 +1,67 @@
+version: '3.7'
+# build services
+services:
+    webstatic:
+        build:
+            context: ./web-static/
+            dockerfile: Dockerfile-webstatic
+        image: 192.168.8.104:5000/webstatic
+        container_name: 'webstatic'
+        volumes:
+            - tmp:/tmp
+        networks:
+            mrxpoc:
+               # ipv4_address: 10.0.0.24
+        ports:
+            - "9090:8080"
+        deploy:
+            mode: replicated
+            replicas: 2
+    webui:
+        build:
+            context: ./web-ui
+            dockerfile: Dockerfile-webui
+        image: 192.168.8.104:5000/webui
+        container_name: 'webui'
+        volumes:
+            - tmp:/tmp
+        networks:
+            mrxpoc:
+               # ipv4_address: 10.0.0.25
+        ports:
+            - "9091:8080"
+        deploy:
+            mode: replicated
+            replicas: 2
+# build haproxy on manager
+    haproxy:
+        build:
+            context: ./haproxy/
+            dockerfile: Dockerfile-haproxy
+        image: 192.168.8.104:5000/haproxy
+        container_name: 'haproxy'
+        environment:
+            - BALANCE=leastconn
+        networks:
+            mrxpoc:
+                ipv4_address: 10.0.0.32
+        ports:
+            - "9000:80"
+        dns: '127.0.0.11'
+        deploy:
+            placement:
+                constraints: [node.role == manager]
+        depends_on:
+            - webstatic
+            - webui
+# build volumes
+volumes:
+    tmp:
+# build overlay network where apps and haproxy exists in
+networks:
+    mrxpoc:
+        driver: overlay
+        ipam:
+            driver: default
+            config:
+                - subnet: "10.0.0.0/24"

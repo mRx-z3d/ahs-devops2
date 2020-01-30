@@ -1,5 +1,5 @@
 # Docker Lab
-### this is a small project to present how to run a sample application with Docker
+### this is a small project presenting how to run a sample application with Docker
 
 ### Some background:
 - running on a **virtualbox**, with **two** vms
